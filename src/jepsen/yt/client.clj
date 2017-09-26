@@ -83,7 +83,7 @@
          (info "waiting for mounted table")
          (compare-and-set! mount-table nil
                            (delay (sh
-                                    "/control/setup-test.sh"
+                                    "./setup-test.sh"
                                     path
                                     (json/write-str (map lookup-map (range (count lookup-map))))
                                     (json/write-str shards))))
@@ -164,4 +164,4 @@
          (compare-and-set! (:logs-copied opts)
                            nil
                            (delay (doseq [ext [".log", ".debug.log"]]
-                                    (sh "cp" (str "/control/proxy" ext) (str log ext)))))))))
+                                    (sh "cp" (str "proxy" ext) (str log ext)))))))))

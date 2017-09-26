@@ -23,14 +23,8 @@
 
 (def db
   (reify db/DB
-    (setup! [_ test node]
-      (c/su
-        (c/exec :bash "/jepsen/run.sh")
-        (info (str node " set up"))))
-    (teardown! [_ test node]
-      (c/su
-        (c/exec :bash "/jepsen/stop.sh")
-        (info (str node " teardown!"))))
+    (setup! [_ test node])
+    (teardown! [_ test node])
     db/LogFiles
       (log-files [_ test node]
         (case node
@@ -66,7 +60,7 @@
                             :mvcc   mvcc-checker/snapshot-serializable})
                 :ssh {:username "root",
                       :strict-host-key-checking false,
-                      :private-key-path "~/.ssh/yt"}})]
+                      :private-key-path "~/porto-layers/root_id_rsa"}})]
     test))
 
 (defn -main
