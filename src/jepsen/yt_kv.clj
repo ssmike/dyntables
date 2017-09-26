@@ -1,4 +1,4 @@
-(ns jepsen.dyntables
+(ns jepsen.yt-kv
   (:gen-class)
   (:import knossos.model.Model)
   (:require [clojure.tools.logging :refer [debug info]]

@@ -11,7 +11,7 @@
                  [org.clojure/data.json "0.2.6"]
                  [ru.yandex/yt-java-ytclient "3163786"]
                  [com.ssmike/mvcc-checker "1.0-SNAPSHOT"]]
-  :main jepsen.dyntables
+  :main jepsen.yt-kv
   :target-path "target/%s"
   :jvm-opts ["-Xmx10g"
              "-XX:+UseConcMarkSweepGC"
