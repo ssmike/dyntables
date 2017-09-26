@@ -18,7 +18,7 @@
                     [net        :as net]
                     [yt-models  :as models]]
             [jepsen.yt.client   :as yt-client]
-            [jepsen.dyntables.checker :as mvcc-checker]
+            [jepsen.mvcc.checker :as mvcc-checker]
             [jepsen.yt.nemesis :refer [partition-master-nodes]]))
 
 (def db

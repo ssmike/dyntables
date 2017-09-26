@@ -9,7 +9,8 @@
                  [org.clojure/data.json "0.2.6"]
                  [spootnik/unilog "0.7.21"]
                  [org.clojure/data.json "0.2.6"]
-                 [ru.yandex/yt-java-ytclient "3163786"]]
+                 [ru.yandex/yt-java-ytclient "3163786"]
+                 [com.ssmike/mvcc-checker "1.0-SNAPSHOT"]]
   :main jepsen.dyntables
   :target-path "target/%s"
   :jvm-opts ["-Xmx10g"

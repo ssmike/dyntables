@@ -5,9 +5,6 @@
                     [generator :as gen]
                     [store :as store]
                     [checker :as checker]]
-            [jepsen.dyntables.memo :as memo]
-            [jepsen.dyntables.wgl :as wgl]
-            [jepsen.dyntables.history :refer [foldup-locks complete-history]]
             [knossos.model :as model])
   (:import (knossos.model Model)))
 
