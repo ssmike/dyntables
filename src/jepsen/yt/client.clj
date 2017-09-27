@@ -4,7 +4,8 @@
             [clojure.tools.logging :refer [info warn error debug]]
             [clojure.java.shell :refer [sh]]
             [jepsen.store :as store]
-            [clojure.data.json :as json])
+            [clojure.data.json :as json]
+            [jepsen.yt-models :as yt])
   (:import io.netty.channel.nio.NioEventLoopGroup
            java.util.LinkedList
            java.util.function.BiFunction
@@ -65,15 +66,6 @@
         (.addKey "key" ColumnValueType/INT64)
         .build)))
 
-(def lookup-map
-  {0 2, 1 21, 2 31, 3 41, 4 51})
-
-(def shards
-  [[], [20], [30], [40], [50]])
-
-(def inv-lookup-map
-  (into {} (map (fn [[fs sc]] [sc fs]) lookup-map)))
-
 (defn client
   [opts]
    (reify client/Client
@@ -85,8 +77,7 @@
                            (delay (sh
                                     "./setup-test.sh"
                                     path
-                                    (json/write-str (map lookup-map (range (count lookup-map))))
-                                    (json/write-str shards))))
+                                    (json/write-str yt/shards))))
          (deref @mount-table)
          (let [rpc-client (-> rpc-opts
                               (rpc-options)
@@ -106,7 +97,7 @@
                     :start-tx
                     (let [req (-> (reduce
                                       (fn [req [key _]]
-                                        (.addFilter req (LinkedList. [(lookup-map key)])))
+                                        (.addFilter req (LinkedList. [key])))
                                       (LookupRowsRequest. path @lookup-schema)
                                       (:value op))
                                   (.addLookupColumns (LinkedList. ["key" "value"])))
@@ -126,7 +117,7 @@
                                            result))))
                                    .join)]
                       {:value (reduce (fn [map row]
-                                        (let [key (-> row (.get "key") .longValue inv-lookup-map)
+                                        (let [key (-> row (.get "key") .longValue)
                                               val (-> row (.get "value") .longValue)]
                                           (assoc map key val)))
                                       {}
@@ -138,7 +129,7 @@
                       (do
                         (let [req (-> (reduce
                                         (fn [req [key val]]
-                                          (.addInsert req (list (lookup-map key) val)))
+                                          (.addInsert req (list key val)))
                                         (ModifyRowsRequest. path @write-schema)
                                         (:value op)))
                               _ (-> (.modifyRows @tx req) .join)

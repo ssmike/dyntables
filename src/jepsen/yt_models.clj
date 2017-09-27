@@ -10,13 +10,21 @@
 
 (def inconsistent model/inconsistent)
 
+(def shards
+  [[], [20], [30], [40], [50]])
+
+(def key-map
+  {0 2, 1 21, 2 31, 3 41, 4 51})
+
 (def max-cell-val 3)
-(def cells-count 5)
+
+(def cells-count (count shards))
 
 (defn gen-cell-val [] (rand-int max-cell-val))
+
 (defn gen-key
-  ([] (rand-int cells-count))
-  ([k] (->> (range cells-count) shuffle (take k))))
+  ([] (key-map (rand-int cells-count)))
+  ([k] (->> (range cells-count) shuffle (take k) key-map)))
 
 (defrecord DynGenerator [writing-processes request-counter]
   gen/Generator
