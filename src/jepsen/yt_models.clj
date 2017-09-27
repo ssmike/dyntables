@@ -72,6 +72,6 @@
                          (set/difference locks op-locks))
             (inconsistent (str "writing to unlocked " op-locks)))))))
 
-(def empty-locked-dict (LockedDict. (into {} (for [i (range cells-count)]
-                                               [i 1]))
-                                    #{}))
+(def init-state (into {} (for [i (vals key-map)] [i 1])))
+
+(def empty-locked-dict (LockedDict. init-state #{}))

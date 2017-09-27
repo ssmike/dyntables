@@ -1,10 +1,11 @@
 (ns jepsen.yt.client
-  (:require [jepsen.client :as client]
+  (:require [clojure.java.shell :as sh]
+            [jepsen.client :as client]
             [jepsen.util :refer [timeout]]
             [clojure.tools.logging :refer [info warn error debug]]
             [clojure.java.shell :refer [sh]]
-            [jepsen.store :as store]
             [clojure.data.json :as json]
+            [jepsen.store :as store]
             [jepsen.yt-models :as yt])
   (:import io.netty.channel.nio.NioEventLoopGroup
            java.util.LinkedList
@@ -73,11 +74,10 @@
      (setup! [this test node]
        (let [{:keys [host port path] :as rpc-opts} (:rpc-opts test)]
          (info "waiting for mounted table")
-         (compare-and-set! mount-table nil
-                           (delay (sh
-                                    "./setup-test.sh"
-                                    path
-                                    (json/write-str yt/shards))))
+         (compare-and-set! mount-table nil (delay (sh/sh "./setup-test.sh"
+                                                         path
+                                                         (json/write-str yt/init-state)
+                                                         (json/write-str yt/shards))))
          (deref @mount-table)
          (let [rpc-client (-> rpc-opts
                               (rpc-options)
